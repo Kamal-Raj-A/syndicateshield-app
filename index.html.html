@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SyndicateShield v2 — Mule Network Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060810;--bg2:#0d1117;--bg3:#131923;--bg4:#1a2130;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#e2e8f0;--muted:#64748b;--dim:#94a3b8;
+  --accent:#3b82f6;--danger:#ef4444;--warn:#f59e0b;--safe:#10b981;--purple:#8b5cf6;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(59,130,246,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.02) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.app{display:flex;flex-direction:column;height:100vh;position:relative;z-index:1}
+
+/* HEADER */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;flex-shrink:0;border-bottom:1px solid var(--border);background:rgba(6,8,16,.97);backdrop-filter:blur(12px);z-index:200}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:14px}
+.logo-name{font-family:var(--mono);font-size:14px;font-weight:500}
+.logo-ver{font-size:9px;background:rgba(59,130,246,.2);color:#93c5fd;border:1px solid rgba(59,130,246,.3);border-radius:3px;padding:1px 5px;font-family:var(--mono);margin-left:6px}
+.navtabs{display:flex;align-items:center;gap:4px}
+.ntab{font-family:var(--mono);font-size:10px;color:var(--muted);padding:6px 14px;border-radius:6px;cursor:pointer;letter-spacing:.07em;text-transform:uppercase;transition:all .2s;border:1px solid transparent}
+.ntab:hover{color:var(--text);background:var(--bg3)}
+.ntab.on{color:#93c5fd;background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.2)}
+.hdr-r{display:flex;align-items:center;gap:14px}
+.pill{display:flex;align-items:center;gap:6px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:20px;padding:4px 10px}
+.pdot{width:6px;height:6px;border-radius:50%;background:var(--safe);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,.5)}50%{opacity:.7;box-shadow:0 0 0 5px rgba(16,185,129,0)}}
+.ptxt{font-family:var(--mono);font-size:10px;color:#34d399;letter-spacing:.06em}
+.clk{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+/* ALERT */
+.alrt{background:linear-gradient(90deg,rgba(239,68,68,.12),rgba(239,68,68,.03));border-bottom:1px solid rgba(239,68,68,.2);padding:0 20px;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;color:#fca5a5;max-height:0;overflow:hidden;transition:max-height .4s,padding .4s;flex-shrink:0}
+.alrt.on{max-height:38px;padding:8px 20px}
+.blink{animation:blk .7s infinite}
+@keyframes blk{0%,100%{opacity:1}50%{opacity:.15}}
+
+/* CONTENT */
+.content{flex:1;overflow:hidden;position:relative}
+.page{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.page.on{display:flex}
+
+/* SHARED */
+.ph{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.pt{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.bdg{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px}
+.bdg-b{background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.2)}
+.bdg-r{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.25)}
+.bdg-g{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.2)}
+.btn{padding:7px 14px;border-radius:5px;font-family:var(--mono);font-size:11px;cursor:pointer;letter-spacing:.04em;border:1px solid;transition:all .2s}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-d{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#fca5a5}
+.btn-d:hover:not(:disabled){background:rgba(239,68,68,.18)}
+.btn-b{background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3);color:#93c5fd}
+.btn-b:hover:not(:disabled){background:rgba(59,130,246,.2)}
+.btn-g{background:transparent;border-color:var(--border2);color:var(--muted)}
+.btn-g:hover{background:var(--bg3);color:var(--text)}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+
+/* ─── DASHBOARD ─── */
+.dgrid{flex:1;display:grid;grid-template-columns:262px 1fr 248px;overflow:hidden;border-top:1px solid var(--border)}
+.dpanel{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.dpanel:last-child{border-right:none}
+
+.alist{overflow-y:auto;flex:1}
+.aitem{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.aitem:hover{background:var(--bg3)}
+.aitem.fl{background:rgba(239,68,68,.04);border-left:2px solid rgba(239,68,68,.45)}
+.aitem.sel{background:rgba(59,130,246,.05);border-left:2px solid rgba(59,130,246,.4)}
+.ai-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.ai-id{font-family:var(--mono);font-size:11px;font-weight:500}
+.ai-sc{font-family:var(--mono);font-size:11px;font-weight:600;padding:1px 7px;border-radius:3px;transition:all .5s}
+.scl{background:rgba(16,185,129,.15);color:#6ee7b7}
+.scm{background:rgba(245,158,11,.15);color:#fcd34d}
+.sch{background:rgba(239,68,68,.2);color:#fca5a5;box-shadow:0 0 6px rgba(239,68,68,.2)}
+.ai-nm{font-size:11px;color:var(--muted);margin-bottom:4px}
+.ai-bar{height:2px;background:rgba(255,255,255,.05);border-radius:1px;overflow:hidden}
+.ai-fill{height:100%;transition:width .8s ease,background .5s}
+.ai-foot{display:flex;justify-content:space-between;margin-top:4px}
+.ai-foot span{font-size:10px;color:var(--muted);font-family:var(--mono)}
+
+/* GRAPH */
+.gw{flex:1;position:relative;overflow:hidden}
+#gsvg{position:absolute;inset:0;width:100%;height:100%}
+#pcvs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.synbox{margin:10px 14px;padding:10px 12px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.16);border-radius:6px;opacity:0;transition:opacity .4s;flex-shrink:0}
+.synbox.on{opacity:1}
+.syn-t{font-family:var(--mono);font-size:10px;color:#c4b5fd;margin-bottom:4px}
+.syn-b{font-size:11px;color:var(--muted);line-height:1.6}
+.gfoot{display:grid;grid-template-columns:repeat(4,1fr);flex-shrink:0;border-top:1px solid var(--border)}
+.gstat{padding:10px;text-align:center;border-right:1px solid var(--border)}
+.gstat:last-child{border-right:none}
+.gsn{font-family:var(--mono);font-size:18px;font-weight:500}
+.gsl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+
+/* TX FEED */
+.txfeed{flex:1;overflow-y:auto}
+.txitem{padding:9px 14px;border-bottom:1px solid var(--border);animation:sli .22s ease}
+@keyframes sli{from{opacity:0;transform:translateX(5px)}to{opacity:1;transform:translateX(0)}}
+.tx-top{display:flex;justify-content:space-between;margin-bottom:3px}
+.tx-id{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.tx-am{font-family:var(--mono);font-size:11px;font-weight:500}
+.tx-am.s{color:#fca5a5}.tx-am.n{color:var(--text)}
+.tx-route{font-size:11px;color:var(--muted);margin-bottom:2px}
+.tx-time{font-size:10px;color:var(--muted);font-family:var(--mono)}
+.tf{font-size:9px;padding:1px 5px;border-radius:3px;margin-left:4px}
+.tf-m{background:rgba(239,68,68,.15);color:#fca5a5}
+.tf-n{background:rgba(16,185,129,.1);color:#6ee7b7}
+
+.evpanel{margin:10px 14px;padding:12px;background:var(--bg2);border:1px solid rgba(239,68,68,.18);border-radius:6px;opacity:0;transition:opacity .4s,transform .4s;transform:translateY(5px);flex-shrink:0}
+.evpanel.on{opacity:1;transform:translateY(0)}
+.ev-title{font-family:var(--mono);font-size:10px;color:#fca5a5;letter-spacing:.08em;margin-bottom:8px}
+.ev-row{display:flex;justify-content:space-between;margin-bottom:5px}
+.ev-k{font-size:11px;color:var(--muted)}.ev-v{font-family:var(--mono);font-size:11px;font-weight:500}
+.fzbtn{width:100%;margin-top:10px;padding:9px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:5px;color:#fca5a5;font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s;letter-spacing:.04em}
+.fzbtn:hover:not(:disabled){background:rgba(239,68,68,.2);box-shadow:0 0 12px rgba(239,68,68,.12)}
+.fzbtn.frozen{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:#6ee7b7}
+
+.cbar{padding:9px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg2);flex-shrink:0}
+.cst{font-size:11px;color:var(--muted);margin-left:auto;font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:400px}
+.savebar{padding:7px 20px;border-top:1px solid rgba(16,185,129,.1);background:rgba(16,185,129,.03);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sv-lbl{font-size:10px;color:var(--safe);font-family:var(--mono);letter-spacing:.07em}
+.sv-val{font-family:var(--mono);font-size:13px;font-weight:500;color:#34d399}
+.sv-sub{font-size:10px;color:var(--muted);margin-left:auto;font-family:var(--mono)}
+
+/* ─── MODAL ─── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.on{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;width:540px;max-height:84vh;overflow-y:auto;animation:mfade .2s ease}
+@keyframes mfade{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.mhdr{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.mtitle{font-family:var(--mono);font-size:14px;font-weight:500}
+.msub{font-size:11px;color:var(--muted);margin-top:3px}
+.mcls{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 4px;transition:color .2s}
+.mcls:hover{color:var(--text)}
+.mbody{padding:18px 20px}
+.mscore-row{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.mscore-n{font-family:var(--mono);font-size:50px;font-weight:500;line-height:1}
+.mverd{font-size:12px;font-weight:500;margin-top:4px}
+.msec{margin-bottom:18px}
+.msec-t{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.frow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.fname{font-size:11px;color:var(--dim);width:200px;flex-shrink:0}
+.fbar-bg{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.fbar-fill{height:100%;border-radius:3px}
+.fval{font-family:var(--mono);font-size:10px;color:var(--dim);width:32px;text-align:right}
+.tline{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.tl-t{font-family:var(--mono);font-size:10px;color:var(--muted);width:60px;flex-shrink:0}
+.tl-e{font-size:11px;color:var(--dim)}
+.tl-a{font-family:var(--mono);font-size:11px;margin-left:auto}
+.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.minic{padding:10px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:6px;text-align:center}
+.mini-n{font-family:var(--mono);font-size:18px;font-weight:500;line-height:1}
+.mini-l{font-size:10px;color:var(--muted);margin-top:4px}
+
+/* ─── MAP PAGE ─── */
+.maplayout{flex:1;display:grid;grid-template-columns:210px 1fr 220px;overflow:hidden;border-top:1px solid var(--border)}
+.mapside{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.mapside.right{border-right:none;border-left:1px solid var(--border)}
+.mapcenter{display:flex;flex-direction:column;overflow:hidden}
+.mapmain{flex:1;display:flex;align-items:center;justify-content:center;padding:14px;overflow:hidden}
+#isvg{width:100%;height:100%;max-width:480px;max-height:560px}
+.city-list{overflow-y:auto;flex:1}
+.city-item{padding:9px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:background .4s}
+.cname{font-size:12px;flex:1}
+.ccount{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.cstatus{font-size:10px;padding:2px 6px;border-radius:3px}
+.cs-a{background:rgba(239,68,68,.15);color:#fca5a5}
+.cs-w{background:rgba(245,158,11,.15);color:#fcd34d}
+.cs-s{background:rgba(16,185,129,.1);color:#6ee7b7}
+.evlog{overflow-y:auto;flex:1}
+.evlog-item{padding:9px 14px;border-bottom:1px solid var(--border);animation:sli .22s ease}
+.evl-top{display:flex;justify-content:space-between;margin-bottom:3px}
+.evl-route{font-size:11px;color:var(--text)}
+.evl-amt{font-family:var(--mono);font-size:11px;color:#fca5a5}
+.evl-time{font-size:10px;color:var(--muted);font-family:var(--mono)}
+.map-cbar{padding:9px 14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg2);flex-shrink:0}
+
+/* ─── ANALYTICS ─── */
+.anpage{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.an-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:11px}
+.ancard{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:15px}
+.ancard-n{font-family:var(--mono);font-size:22px;font-weight:500;line-height:1}
+.ancard-l{font-size:10px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.07em}
+.ancard-s{font-size:10px;color:var(--safe);margin-top:3px;font-family:var(--mono)}
+.an-row2a{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.an-row2b{display:grid;grid-template-columns:1.6fr 1fr;gap:14px}
+.cc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px}
+.cc-t{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.anktable{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.akt-h{padding:10px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.anktable table{width:100%;border-collapse:collapse}
+.anktable th{padding:7px 12px;text-align:left;font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:.05em;border-bottom:1px solid var(--border)}
+.anktable td{padding:8px 12px;font-size:12px;border-bottom:1px solid var(--border)}
+.anktable tr:last-child td{border-bottom:none}
+.anktable tr:hover td{background:var(--bg3)}
+
+/* ─── ML METRICS ─── */
+.mpage{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.m3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mbig{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center}
+.mbig-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.mbig-val{font-family:var(--mono);font-size:50px;font-weight:500;line-height:1}
+.mbig-bar{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin:12px 0 6px;overflow:hidden}
+.mbig-fill{height:100%;border-radius:2px;transition:width 1.5s ease;width:0}
+.mbig-sub{font-size:11px;color:var(--muted)}
+.m2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cm-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:10px}
+.cmcell{padding:14px;text-align:center;border-radius:4px}
+.cmval{font-family:var(--mono);font-size:20px;font-weight:500}
+.cmlbl{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.4}
+.fi-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.fi-name{font-size:11px;color:var(--dim);width:220px;flex-shrink:0}
+.fi-bar{height:8px;border-radius:4px;transition:width 1.2s ease;background:linear-gradient(90deg,#1d4ed8,#3b82f6)}
+.fi-pct{font-family:var(--mono);font-size:10px;color:var(--muted);width:34px;text-align:right}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="logo">
+    <div class="logo-icon">🛡</div>
+    <div style="display:flex;align-items:center;gap:4px">
+      <span class="logo-name">SyndicateShield</span>
+      <span class="logo-ver">v2.0</span>
+    </div>
+  </div>
+  <div class="navtabs">
+    <div class="ntab on" onclick="nav('dashboard',this)">⬡ Dashboard</div>
+    <div class="ntab" onclick="nav('map',this)">◎ Geo Map</div>
+    <div class="ntab" onclick="nav('analytics',this)">▦ Analytics</div>
+    <div class="ntab" onclick="nav('metrics',this)">◈ ML Metrics</div>
+  </div>
+  <div class="hdr-r">
+    <div class="pill"><div class="pdot"></div><div class="ptxt">MONITORING</div></div>
+    <div class="clk" id="clk">--:--:--</div>
+  </div>
+</div>
+
+<!-- ALERT BANNER -->
+<div class="alrt" id="alrt">
+  <span class="blink">⚠</span>
+  <span>SYNDICATE #47 DETECTED — 9 accounts showing coordinated mule activity — Funds in transit: ₹3,12,400</span>
+  <span style="margin-left:auto;font-size:10px;opacity:.6" id="alrt-time"></span>
+</div>
+
+<div class="content">
+
+<!-- ════════════════ DASHBOARD ════════════════ -->
+<div class="page on" id="page-dashboard">
+  <div class="dgrid" style="flex:1;overflow:hidden">
+
+    <!-- LEFT: Accounts -->
+    <div class="dpanel">
+      <div class="ph">
+        <div class="pt">monitored accounts</div>
+        <div class="bdg bdg-b">47 active</div>
+      </div>
+      <div class="alist" id="alist"></div>
+    </div>
+
+    <!-- CENTER: Graph -->
+    <div class="dpanel" style="border-right:none">
+      <div class="ph">
+        <div class="pt">syndicate transaction graph</div>
+        <div style="display:flex;gap:6px">
+          <div class="bdg bdg-r" id="synbdg" style="display:none">SYNDICATE #47</div>
+          <div class="bdg bdg-b">live</div>
+        </div>
+      </div>
+      <div class="gw">
+        <svg id="gsvg" viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="arR" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5Z" fill="rgba(239,68,68,.8)"/></marker>
+            <marker id="arA" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5Z" fill="rgba(245,158,11,.7)"/></marker>
+            <marker id="arP" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5Z" fill="rgba(139,92,246,.8)"/></marker>
+          </defs>
+          <g id="ge"></g>
+          <g id="gn"></g>
+        </svg>
+        <canvas id="pcvs"></canvas>
+      </div>
+      <div class="synbox" id="synbox">
+        <div class="syn-t">▶ DBSCAN CLUSTER #47 — SYNCHRONIZED MULE NETWORK IDENTIFIED</div>
+        <div class="syn-b">9 accounts · receive→forward within 8-min window · Controller: <span style="color:#c4b5fd;font-family:var(--mono)">ACC-031</span> · Est. funds: <span style="color:#fca5a5;font-family:var(--mono)">₹3,12,400</span></div>
+      </div>
+      <div class="gfoot">
+        <div class="gstat"><div class="gsn" id="sf" style="color:#f87171">0</div><div class="gsl">flagged</div></div>
+        <div class="gstat"><div class="gsn" id="sr" style="color:#fbbf24">0</div><div class="gsl">high risk</div></div>
+        <div class="gstat"><div class="gsn" id="sp" style="color:#34d399">₹0</div><div class="gsl">protected</div></div>
+        <div class="gstat"><div class="gsn" id="ss" style="color:#60a5fa">0</div><div class="gsl">syndicates</div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Feed + Evidence -->
+    <div class="dpanel">
+      <div class="ph">
+        <div class="pt">transaction feed</div>
+        <div class="bdg bdg-b">live</div>
+      </div>
+      <div class="evpanel" id="evpanel">
+        <div class="ev-title">⚠ FREEZE RECOMMENDATION — SYNDICATE #47</div>
+        <div class="ev-row"><span class="ev-k">Accounts</span><span class="ev-v">9 mule accounts</span></div>
+        <div class="ev-row"><span class="ev-k">Detected</span><span class="ev-v" id="dett">--:--:--</span></div>
+        <div class="ev-row"><span class="ev-k">Avg mule score</span><span class="ev-v">84 / 100</span></div>
+        <div class="ev-row"><span class="ev-k">Funds at risk</span><span class="ev-v" style="color:#fca5a5">₹3,12,400</span></div>
+        <div class="ev-row"><span class="ev-k">Models</span><span class="ev-v">IsoForest+XGB+DBSCAN</span></div>
+        <button class="fzbtn" id="fzbtn" onclick="doFreeze()">⬡ FREEZE ALL 9 ACCOUNTS</button>
+      </div>
+      <div class="txfeed" id="txfeed"></div>
+    </div>
+  </div>
+
+  <div class="cbar">
+    <button class="btn btn-d" id="simbtn" onclick="runSim()">▶ RUN FRAUD SIMULATION</button>
+    <button class="btn btn-g" onclick="resetSim()">↺ RESET</button>
+    <button class="btn btn-b" onclick="doExport()">⬇ EXPORT REPORT</button>
+    <div class="cst" id="cst">Click any account to inspect XGBoost breakdown · Click Simulate to begin demo</div>
+  </div>
+  <div class="savebar">
+    <div class="sv-lbl">FUNDS PROTECTED:</div>
+    <div class="sv-val" id="svval">₹0</div>
+    <div class="sv-sub" id="svsub">0 syndicates · 0 accounts frozen</div>
+  </div>
+</div>
+
+<!-- ════════════════ MAP PAGE ════════════════ -->
+<div class="page" id="page-map">
+  <div class="maplayout" style="flex:1;overflow:hidden">
+    <div class="mapside">
+      <div class="ph"><div class="pt">affected cities</div><div class="bdg bdg-r" id="mapbdg">0 active</div></div>
+      <div class="city-list" id="citylist"></div>
+    </div>
+    <div class="mapcenter">
+      <div class="ph"><div class="pt">india fraud propagation map</div><div class="bdg bdg-b">real-time</div></div>
+      <div class="mapmain">
+        <svg id="isvg" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg">
+          <path d="M158,24 L200,18 L248,22 L298,24 L338,52 L372,92 L392,138 L384,184 L374,218 L368,262 L354,308 L332,354 L304,398 L274,440 L246,492 L218,526 L194,540 L168,520 L142,490 L114,452 L90,402 L70,354 L60,298 L56,248 L62,198 L78,154 L95,108 L120,68 Z"
+            fill="rgba(20,30,50,.5)" stroke="rgba(100,116,139,.18)" stroke-width="1.5"/>
+          <g opacity=".04" stroke="#94a3b8" stroke-width=".5">
+            <line x1="56" y1="150" x2="392" y2="150"/><line x1="56" y1="250" x2="392" y2="250"/>
+            <line x1="56" y1="350" x2="392" y2="350"/><line x1="56" y1="450" x2="392" y2="450"/>
+            <line x1="150" y1="20" x2="150" y2="540"/><line x1="250" y1="20" x2="250" y2="540"/><line x1="350" y1="20" x2="350" y2="540"/>
+          </g>
+          <g id="map-arcs"></g>
+          <g id="map-cities"></g>
+        </svg>
+      </div>
+      <div class="map-cbar">
+        <button class="btn btn-d" id="mapbtn" onclick="runMapSim()" style="font-size:10px;padding:5px 12px">▶ SIMULATE PROPAGATION</button>
+        <span style="font-size:10px;color:var(--muted);font-family:var(--mono)" id="mapst">Watch fraud spread city-to-city in real time</span>
+      </div>
+    </div>
+    <div class="mapside right">
+      <div class="ph"><div class="pt">fraud event log</div></div>
+      <div class="evlog" id="evlog"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ ANALYTICS PAGE ════════════════ -->
+<div class="page" id="page-analytics">
+  <div class="anpage">
+    <div class="an-stats">
+      <div class="ancard"><div class="ancard-n" style="color:#f87171">1,247</div><div class="ancard-l">Total Frauds Detected</div><div class="ancard-s">↑ 12% this month</div></div>
+      <div class="ancard"><div class="ancard-n" style="color:#34d399">₹8.4 Cr</div><div class="ancard-l">Funds Protected</div><div class="ancard-s">↑ 23% vs last month</div></div>
+      <div class="ancard"><div class="ancard-n" style="color:#fbbf24">47</div><div class="ancard-l">Syndicates Dismantled</div><div class="ancard-s">↑ 8 this week</div></div>
+      <div class="ancard"><div class="ancard-n" style="color:#60a5fa">3.8m</div><div class="ancard-l">Avg Detection Time</div><div class="ancard-s">↓ 22% vs baseline</div></div>
+      <div class="ancard"><div class="ancard-n" style="color:#c4b5fd">91.2%</div><div class="ancard-l">Precision Score</div><div class="ancard-s">F1 Score: 0.89</div></div>
+    </div>
+    <div class="an-row2a">
+      <div class="cc"><div class="cc-t">fraud detections — last 30 days</div><canvas id="line-cv" height="170"></canvas></div>
+      <div class="cc"><div class="cc-t">mule risk score distribution</div><canvas id="hist-cv" height="170"></canvas></div>
+    </div>
+    <div class="an-row2b">
+      <div class="anktable">
+        <div class="akt-h">top flagged accounts this week</div>
+        <table><thead><tr><th>Account</th><th>Name</th><th>Score</th><th>Txns</th><th>Amount</th><th>Status</th></tr></thead>
+        <tbody id="atbody"></tbody></table>
+      </div>
+      <div class="cc"><div class="cc-t">fraud by category</div><canvas id="donut-cv" height="170"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ ML METRICS PAGE ════════════════ -->
+<div class="page" id="page-metrics">
+  <div class="mpage">
+    <div class="m3">
+      <div class="mbig">
+        <div class="mbig-lbl">Precision</div>
+        <div class="mbig-val" style="color:#34d399">0.91</div>
+        <div class="mbig-bar"><div class="mbig-fill" id="mfill-p" style="background:#10b981"></div></div>
+        <div class="mbig-sub">91% of flagged accounts are genuine mules — minimises false freezes</div>
+      </div>
+      <div class="mbig">
+        <div class="mbig-lbl">Recall</div>
+        <div class="mbig-val" style="color:#60a5fa">0.87</div>
+        <div class="mbig-bar"><div class="mbig-fill" id="mfill-r" style="background:#3b82f6"></div></div>
+        <div class="mbig-sub">Captures 87% of all actual mule accounts — high coverage of fraud network</div>
+      </div>
+      <div class="mbig">
+        <div class="mbig-lbl">F1 Score</div>
+        <div class="mbig-val" style="color:#c4b5fd">0.89</div>
+        <div class="mbig-bar"><div class="mbig-fill" id="mfill-f" style="background:#8b5cf6"></div></div>
+        <div class="mbig-sub">Balanced harmonic mean — state-of-art for mule detection task</div>
+      </div>
+    </div>
+    <div class="m2">
+      <div class="cc">
+        <div class="cc-t">confusion matrix — XGBoost classifier (n=10,900)</div>
+        <div class="cm-grid">
+          <div class="cmcell" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2)"><div class="cmval" style="color:#34d399">847</div><div class="cmlbl">True Positive<br>Correctly flagged mules</div></div>
+          <div class="cmcell" style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.15)"><div class="cmval" style="color:#fca5a5">84</div><div class="cmlbl">False Positive<br>Incorrectly flagged</div></div>
+          <div class="cmcell" style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.15)"><div class="cmval" style="color:#fcd34d">127</div><div class="cmlbl">False Negative<br>Missed mules</div></div>
+          <div class="cmcell" style="background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.15)"><div class="cmval" style="color:#93c5fd">9,842</div><div class="cmlbl">True Negative<br>Correctly cleared</div></div>
+        </div>
+      </div>
+      <div class="cc">
+        <div class="cc-t">ROC curve — AUC = 0.94</div>
+        <canvas id="roc-cv" height="200"></canvas>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="cc-t">XGBoost feature importance — top 10 predictive signals</div>
+      <div id="fi-cont" style="padding-top:6px"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-ov" onclick="if(event.target===this)this.classList.remove('on')">
+  <div class="modal">
+    <div class="mhdr">
+      <div><div class="mtitle" id="m-title"></div><div class="msub" id="m-sub"></div></div>
+      <button class="mcls" onclick="document.getElementById('modal-ov').classList.remove('on')">✕</button>
+    </div>
+    <div class="mbody" id="m-body"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const ACCS=[
+  {id:'ACC-001',nm:'Ramesh K.',sc:8, bal:'₹12,400',tp:'savings',mule:false,city:'Chennai'},
+  {id:'ACC-007',nm:'Priya S.',sc:12,bal:'₹8,200', tp:'current',mule:true, city:'Bangalore'},
+  {id:'ACC-012',nm:'Muthu R.',sc:7, bal:'₹34,100',tp:'savings',mule:false,city:'Madurai'},
+  {id:'ACC-015',nm:'Lakshmi V.',sc:15,bal:'₹5,600',tp:'savings',mule:false,city:'Coimbatore'},
+  {id:'ACC-019',nm:'Arjun P.',sc:9, bal:'₹22,000',tp:'current',mule:false,city:'Mumbai'},
+  {id:'ACC-023',nm:'Kavitha M.',sc:11,bal:'₹9,800', tp:'savings',mule:false,city:'Hyderabad'},
+  {id:'ACC-028',nm:'Suresh B.',sc:6, bal:'₹45,200',tp:'current',mule:false,city:'Delhi'},
+  {id:'ACC-031',nm:'Dinesh T.',sc:14,bal:'₹3,100', tp:'savings',mule:true, city:'Chennai',master:true},
+  {id:'ACC-034',nm:'Geetha N.',sc:10,bal:'₹7,500', tp:'savings',mule:true, city:'Bangalore'},
+  {id:'ACC-038',nm:'Vijay C.',sc:8, bal:'₹18,700',tp:'current',mule:false,city:'Pune'},
+  {id:'ACC-041',nm:'Anitha R.',sc:13,bal:'₹2,900', tp:'savings',mule:true, city:'Trichy'},
+  {id:'ACC-044',nm:'Karthik L.',sc:7, bal:'₹31,200',tp:'savings',mule:false,city:'Chennai'},
+  {id:'ACC-047',nm:'Meena S.',sc:9, bal:'₹6,400', tp:'savings',mule:true, city:'Madurai'},
+  {id:'ACC-052',nm:'Balu V.',sc:11,bal:'₹14,300',tp:'current',mule:true, city:'Coimbatore'},
+  {id:'ACC-056',nm:'Selvi T.',sc:8, bal:'₹8,100', tp:'savings',mule:true, city:'Hyderabad'},
+  {id:'ACC-061',nm:'Rajan M.',sc:12,bal:'₹4,700', tp:'savings',mule:true, city:'Mumbai'},
+  {id:'ACC-065',nm:'Parvathi K.',sc:6,bal:'₹27,500',tp:'current',mule:false,city:'Kolkata'},
+  {id:'ACC-069',nm:'Senthil A.',sc:10,bal:'₹11,200',tp:'savings',mule:true, city:'Trichy'},
+  {id:'ACC-072',nm:'Radha P.',sc:9, bal:'₹9,600', tp:'savings',mule:false,city:'Bangalore'},
+  {id:'ACC-078',nm:'Murugan S.',sc:7, bal:'₹33,800',tp:'current',mule:false,city:'Chennai'},
+];
+const MULE_IDS=['ACC-031','ACC-034','ACC-041','ACC-047','ACC-052','ACC-056','ACC-061','ACC-069','ACC-007'];
+const NODE_POS={
+  'ACC-031':{x:340,y:196},'ACC-034':{x:195,y:115},'ACC-041':{x:155,y:228},
+  'ACC-047':{x:204,y:324},'ACC-052':{x:340,y:360},'ACC-056':{x:468,y:314},
+  'ACC-061':{x:510,y:198},'ACC-069':{x:460,y:100},'ACC-007':{x:320,y:76},
+  'VICTIM':{x:72,y:76},'CRYPTO':{x:608,y:196}
+};
+const EDGES=[
+  {f:'VICTIM', t:'ACC-034',amt:'₹38,000',col:'#f59e0b',mk:'arA'},
+  {f:'VICTIM', t:'ACC-041',amt:'₹42,000',col:'#f59e0b',mk:'arA'},
+  {f:'ACC-034',t:'ACC-031',amt:'₹36,100',col:'#ef4444',mk:'arR'},
+  {f:'ACC-041',t:'ACC-031',amt:'₹40,200',col:'#ef4444',mk:'arR'},
+  {f:'ACC-047',t:'ACC-031',amt:'₹28,400',col:'#ef4444',mk:'arR'},
+  {f:'ACC-052',t:'ACC-031',amt:'₹31,200',col:'#ef4444',mk:'arR'},
+  {f:'ACC-056',t:'ACC-031',amt:'₹22,800',col:'#ef4444',mk:'arR'},
+  {f:'ACC-061',t:'ACC-031',amt:'₹18,600',col:'#ef4444',mk:'arR'},
+  {f:'ACC-069',t:'ACC-031',amt:'₹25,400',col:'#ef4444',mk:'arR'},
+  {f:'ACC-007',t:'ACC-031',amt:'₹15,700',col:'#ef4444',mk:'arR'},
+  {f:'ACC-031',t:'CRYPTO', amt:'₹2,18,400',col:'#8b5cf6',mk:'arP'},
+];
+
+// ═══════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════
+function nav(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  el.classList.add('on');
+  if(id==='analytics') setTimeout(initAnalytics,80);
+  if(id==='metrics')   setTimeout(initMetrics,80);
+  if(id==='map')       initMap();
+}
+
+setInterval(()=>{document.getElementById('clk').textContent=new Date().toLocaleTimeString('en-IN',{hour12:false})},1000);
+
+// ═══════════════════════════════════════════
+// ACCOUNT LIST
+// ═══════════════════════════════════════════
+function renderAccounts(){
+  const el=document.getElementById('alist');el.innerHTML='';
+  ACCS.forEach(a=>{
+    const d=document.createElement('div');
+    d.className='aitem'+(a.flagged?' fl':'');
+    d.id='ai-'+a.id; d.onclick=()=>openModal(a);
+    const sc=a.sc>=70?'sch':a.sc>=40?'scm':'scl';
+    const bc=a.sc>=70?'#ef4444':a.sc>=40?'#f59e0b':'#10b981';
+    d.innerHTML=`<div class="ai-top"><div class="ai-id">${a.id}</div><div class="ai-sc ${sc}" id="asc-${a.id}">${a.sc}</div></div>
+    <div class="ai-nm">${a.nm} · ${a.tp} · ${a.city}</div>
+    <div class="ai-bar"><div class="ai-fill" id="afill-${a.id}" style="width:${a.sc}%;background:${bc}"></div></div>
+    <div class="ai-foot"><span>${a.bal}</span><span id="atxt-${a.id}">${a.flagged?'⚠ FLAGGED':'normal'}</span></div>`;
+    el.appendChild(d);
+  });
+}
+
+function updateScore(id,sc){
+  const a=ACCS.find(x=>x.id===id);if(!a)return;
+  a.sc=Math.min(100,sc);
+  const se=document.getElementById('asc-'+id);
+  const be=document.getElementById('afill-'+id);
+  const te=document.getElementById('atxt-'+id);
+  if(!se)return;
+  const cls=a.sc>=70?'sch':a.sc>=40?'scm':'scl';
+  const bc=a.sc>=70?'#ef4444':a.sc>=40?'#f59e0b':'#10b981';
+  se.className='ai-sc '+cls;se.textContent=a.sc;
+  be.style.width=a.sc+'%';be.style.background=bc;
+  if(a.sc>=70&&!a.flagged){a.flagged=true;document.getElementById('ai-'+id)?.classList.add('fl');if(te)te.textContent='⚠ FLAGGED';}
+  activateNode(id,a.sc);
+}
+
+// ═══════════════════════════════════════════
+// GRAPH
+// ═══════════════════════════════════════════
+function drawGraph(){
+  const ge=document.getElementById('ge'),gn=document.getElementById('gn');
+  ge.innerHTML='';gn.innerHTML='';
+  EDGES.forEach((e,i)=>{
+    const fp=NODE_POS[e.f],tp=NODE_POS[e.t];
+    const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+    ln.setAttribute('x1',fp.x);ln.setAttribute('y1',fp.y);
+    ln.setAttribute('x2',tp.x);ln.setAttribute('y2',tp.y);
+    ln.setAttribute('stroke',e.col);ln.setAttribute('stroke-width','1.5');
+    ln.setAttribute('opacity','0');ln.setAttribute('marker-end','url(#'+e.mk+')');
+    ln.setAttribute('id','el-'+i);ln.style.transition='opacity .5s';
+    ge.appendChild(ln);
+  });
+  makeSpecialNode(gn,'VICTIM',NODE_POS.VICTIM,'⚡','#f59e0b','VICTIM','₹3.8L');
+  makeSpecialNode(gn,'CRYPTO',NODE_POS.CRYPTO,'◈','#8b5cf6','CRYPTO','Wallet');
+  MULE_IDS.forEach(id=>{
+    const p=NODE_POS[id];const isMaster=id==='ACC-031';
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('id','gn-'+id);g.style.cursor='pointer';
+    g.onclick=()=>openModal(ACCS.find(a=>a.id===id));
+    const r=isMaster?26:18;
+    g.innerHTML=`<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="rgba(18,22,38,.9)" stroke="rgba(100,116,139,.35)" stroke-width="1" id="gc-${id}"/>
+    <text x="${p.x}" y="${p.y+1}" text-anchor="middle" dominant-baseline="central" font-family="IBM Plex Mono" font-size="9" fill="#475569" id="gt-${id}">${id.replace('ACC-','')}</text>
+    <text x="${p.x}" y="${p.y+14}" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#334155" id="gs-${id}" font-weight="500"></text>`;
+    gn.appendChild(g);
+  });
+}
+
+function makeSpecialNode(par,id,pos,icon,col,lbl,sub){
+  const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.id='gn-'+id;g.setAttribute('opacity','0');g.style.transition='opacity .5s';
+  g.innerHTML=`<circle cx="${pos.x}" cy="${pos.y}" r="22" fill="rgba(18,22,38,.9)" stroke="${col}" stroke-width="1.5" opacity=".65"/>
+  <text x="${pos.x}" y="${pos.y+1}" text-anchor="middle" dominant-baseline="central" font-family="IBM Plex Mono" font-size="13" fill="${col}">${icon}</text>
+  <text x="${pos.x}" y="${pos.y+30}" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="${col}">${lbl}</text>
+  <text x="${pos.x}" y="${pos.y+42}" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="rgba(148,163,184,.6)">${sub}</text>`;
+  par.appendChild(g);
+}
+
+function showEdge(i){const e=document.getElementById('el-'+i);if(e)e.setAttribute('opacity','1');}
+function showSNode(id){const g=document.getElementById('gn-'+id);if(g)g.setAttribute('opacity','1');}
+
+function activateNode(id,sc){
+  const c=document.getElementById('gc-'+id);
+  const t=document.getElementById('gt-'+id);
+  const s=document.getElementById('gs-'+id);
+  if(!c)return;
+  const col=sc>=70?'#ef4444':sc>=40?'#f59e0b':'#10b981';
+  const fill=sc>=70?'rgba(239,68,68,.12)':sc>=40?'rgba(245,158,11,.08)':'rgba(16,185,129,.08)';
+  c.setAttribute('fill',fill);c.setAttribute('stroke',col);
+  c.setAttribute('stroke-width',id==='ACC-031'?'2.5':'1.5');
+  if(sc>=70)c.setAttribute('filter','url(#glow)');
+  if(t)t.setAttribute('fill',col);
+  if(s){s.textContent=sc;s.setAttribute('fill',col);}
+}
+
+// ═══════════════════════════════════════════
+// PARTICLES
+// ═══════════════════════════════════════════
+let particles=[],rafId=null,spawnInt=null;
+
+function setupCanvas(){
+  const svg=document.getElementById('gsvg');
+  const cv=document.getElementById('pcvs');
+  const r=svg.getBoundingClientRect();
+  cv.width=r.width;cv.height=r.height;
+}
+
+function spawnParticle(ei){
+  const e=EDGES[ei];
+  const fp=NODE_POS[e.f],tp=NODE_POS[e.t];
+  const svg=document.getElementById('gsvg');
+  const vb=svg.viewBox.baseVal;
+  const r=svg.getBoundingClientRect();
+  const sx=r.width/vb.width,sy=r.height/vb.height;
+  particles.push({x1:fp.x*sx,y1:fp.y*sy,x2:tp.x*sx,y2:tp.y*sy,t:0,sp:.007+Math.random()*.006,col:e.col,sz:2+Math.random()*2});
+}
+
+function animParticles(){
+  const cv=document.getElementById('pcvs');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  particles=particles.filter(p=>{
+    p.t+=p.sp;if(p.t>1)return false;
+    const x=p.x1+(p.x2-p.x1)*p.t;
+    const y=p.y1+(p.y2-p.y1)*p.t;
+    const al=p.t<.1?p.t*10:p.t>.9?(1-p.t)*10:1;
+    const h=Math.round(al*255).toString(16).padStart(2,'0');
+    ctx.beginPath();ctx.arc(x,y,p.sz,0,Math.PI*2);ctx.fillStyle=p.col+h;ctx.fill();
+    ctx.beginPath();ctx.arc(x,y,p.sz*2.5,0,Math.PI*2);ctx.fillStyle=p.col+Math.round(al*60).toString(16).padStart(2,'0');ctx.fill();
+    return true;
+  });
+  rafId=requestAnimationFrame(animParticles);
+}
+
+function startParticles(edgeIdxs){
+  setupCanvas();if(rafId)cancelAnimationFrame(rafId);animParticles();
+  if(spawnInt)clearInterval(spawnInt);
+  spawnInt=setInterval(()=>edgeIdxs.forEach(i=>{if(Math.random()<.4)spawnParticle(i);}),140);
+}
+function stopParticles(){if(spawnInt){clearInterval(spawnInt);spawnInt=null;}}
+
+// ═══════════════════════════════════════════
+// TX FEED
+// ═══════════════════════════════════════════
+let txNum=0;
+function addTx(from,to,amt,isMule){
+  txNum++;
+  const feed=document.getElementById('txfeed');
+  const now=new Date().toLocaleTimeString('en-IN',{hour12:false});
+  const d=document.createElement('div');d.className='txitem';
+  d.innerHTML=`<div class="tx-top"><div class="tx-id">TXN-${String(txNum).padStart(5,'0')}</div><div class="tx-am ${isMule?'s':'n'}">${amt}<span class="tf ${isMule?'tf-m':'tf-n'}">${isMule?'MULE':'OK'}</span></div></div>
+  <div class="tx-route">${from} → ${to}</div><div class="tx-time">${now}</div>`;
+  feed.insertBefore(d,feed.firstChild);
+  if(feed.children.length>40)feed.removeChild(feed.lastChild);
+}
+
+function setStatus(msg){document.getElementById('cst').textContent=msg;}
+function setStats(f,r,p,s){
+  document.getElementById('sf').textContent=f;
+  document.getElementById('sr').textContent=r;
+  document.getElementById('sp').textContent=p;
+  document.getElementById('ss').textContent=s;
+}
+
+// ═══════════════════════════════════════════
+// SIMULATION
+// ═══════════════════════════════════════════
+let simActive=false,simTimers=[];
+
+function runSim(){
+  if(simActive)return;simActive=true;
+  document.getElementById('simbtn').textContent='⟳ SIMULATING...';
+  document.getElementById('simbtn').disabled=true;
+  const T=(ms,fn)=>simTimers.push(setTimeout(fn,ms));
+
+  T(400,()=>{setStatus('Phase 1: Monitoring normal baseline activity across 47 accounts...');addTx('ACC-028','HDFC ATM','₹5,000',false);addTx('ACC-012','Salary Credit','₹35,000',false);addTx('ACC-065','Amazon Pay','₹1,299',false);});
+  T(1700,()=>{addTx('ACC-044','UPI Transfer','₹8,500',false);addTx('ACC-072','NEFT Credit','₹15,000',false);});
+  T(3000,()=>{
+    setStatus('⚡ Isolation Forest: Anomaly — simultaneous inbound transfers to dormant accounts...');
+    showSNode('VICTIM');
+    addTx('VICTIM (Savitha R.)','ACC-034','₹38,000',true);
+    addTx('VICTIM (Savitha R.)','ACC-041','₹42,000',true);
+    showEdge(0);showEdge(1);
+    updateScore('ACC-034',44);updateScore('ACC-041',51);
+    startParticles([0,1]);setStats(0,2,'₹0',0);
+  });
+  T(4600,()=>{
+    setStatus('⚡ XGBoost: Dormancy-burst pattern — 6 more accounts activating simultaneously...');
+    addTx('VICTIM (Savitha R.)','ACC-047','₹28,000',true);addTx('VICTIM (Savitha R.)','ACC-052','₹31,000',true);addTx('VICTIM (Savitha R.)','ACC-056','₹22,000',true);
+    showEdge(4);showEdge(5);showEdge(6);
+    updateScore('ACC-047',62);updateScore('ACC-052',58);updateScore('ACC-056',67);
+    startParticles([0,1,4,5,6]);setStats(1,5,'₹1.2L',0);
+  });
+  T(6300,()=>{
+    addTx('VICTIM (Savitha R.)','ACC-061','₹18,000',true);addTx('VICTIM (Savitha R.)','ACC-069','₹25,000',true);addTx('VICTIM (Savitha R.)','ACC-007','₹15,000',true);
+    showEdge(7);showEdge(8);showEdge(9);
+    updateScore('ACC-061',71);updateScore('ACC-069',68);updateScore('ACC-007',74);
+    startParticles([0,1,4,5,6,7,8,9]);setStats(3,7,'₹2.1L',0);
+  });
+  T(8000,()=>{
+    setStatus('🔴 XGBoost scores crossing 70 threshold — receive-then-forward pattern confirmed...');
+    MULE_IDS.filter(i=>i!=='ACC-031').forEach(i=>updateScore(i,72+Math.floor(Math.random()*18)));
+    addTx('ACC-034','ACC-031','₹36,100',true);addTx('ACC-041','ACC-031','₹40,200',true);addTx('ACC-047','ACC-031','₹28,400',true);
+    showEdge(2);showEdge(3);
+    updateScore('ACC-031',55);setStats(7,8,'₹2.8L',0);
+  });
+  T(9800,()=>{
+    addTx('ACC-052','ACC-031','₹31,200',true);addTx('ACC-056','ACC-031','₹22,800',true);addTx('ACC-061','ACC-031','₹18,600',true);addTx('ACC-069','ACC-031','₹25,400',true);addTx('ACC-007','ACC-031','₹15,700',true);
+    updateScore('ACC-031',91);
+    startParticles([0,1,2,3,4,5,6,7,8,9]);setStats(9,9,'₹3.1L',0);
+  });
+  T(11500,()=>{
+    setStatus('🔴🔴 DBSCAN Cluster #47 confirmed — 9 accounts exhibit synchronized behavioral fingerprint...');
+    document.getElementById('alrt').classList.add('on');
+    document.getElementById('alrt-time').textContent=new Date().toLocaleTimeString('en-IN',{hour12:false});
+    document.getElementById('synbdg').style.display='flex';
+    document.getElementById('synbox').classList.add('on');
+    document.getElementById('dett').textContent=new Date().toLocaleTimeString('en-IN',{hour12:false});
+    document.getElementById('evpanel').classList.add('on');
+    setStats(9,9,'₹3.1L',1);
+  });
+  T(13500,()=>{
+    setStatus('🔴 Controller ACC-031 attempting forward to crypto wallet — ₹2,18,400...');
+    addTx('ACC-031','Crypto Wallet (Dubai)','₹2,18,400',true);
+    showSNode('CRYPTO');showEdge(10);startParticles([10]);
+  });
+  T(15200,()=>{setStatus('⚠ FREEZE RECOMMENDATION READY — Evidence compiled. Click FREEZE to intercept ₹3,12,400');});
+}
+
+function doFreeze(){
+  const b=document.getElementById('fzbtn');
+  b.textContent='✓ ALL 9 ACCOUNTS FROZEN — ₹3,12,400 PROTECTED';
+  b.classList.add('frozen');b.disabled=true;
+  stopParticles();
+  setStatus('✅ SUCCESS — 9 mule accounts frozen. ₹3,12,400 intercepted. Evidence package ready for law enforcement.');
+  document.getElementById('svval').textContent='₹3,12,400';
+  document.getElementById('svsub').textContent='1 syndicate detected · 9 accounts frozen';
+  setStats(9,9,'₹3.1L',1);
+  MULE_IDS.forEach(id=>{
+    const c=document.getElementById('gc-'+id),t=document.getElementById('gt-'+id);
+    if(c){c.setAttribute('stroke','#10b981');c.setAttribute('fill','rgba(16,185,129,.1)');c.removeAttribute('filter');}
+    if(t)t.setAttribute('fill','#34d399');
+  });
+  const e10=document.getElementById('el-10');
+  if(e10){e10.setAttribute('stroke-dasharray','5 3');e10.setAttribute('opacity','.2');}
+}
+
+function resetSim(){
+  simTimers.forEach(t=>clearTimeout(t));simTimers=[];simActive=false;txNum=0;particles=[];stopParticles();
+  if(rafId){cancelAnimationFrame(rafId);rafId=null;}
+  ACCS.forEach(a=>{a.sc=Math.floor(Math.random()*15)+5;a.flagged=false;});
+  document.getElementById('simbtn').textContent='▶ RUN FRAUD SIMULATION';
+  document.getElementById('simbtn').disabled=false;
+  document.getElementById('alrt').classList.remove('on');
+  document.getElementById('synbdg').style.display='none';
+  document.getElementById('synbox').classList.remove('on');
+  document.getElementById('evpanel').classList.remove('on');
+  document.getElementById('fzbtn').textContent='⬡ FREEZE ALL 9 ACCOUNTS';
+  document.getElementById('fzbtn').classList.remove('frozen');
+  document.getElementById('fzbtn').disabled=false;
+  document.getElementById('txfeed').innerHTML='';
+  document.getElementById('svval').textContent='₹0';
+  document.getElementById('svsub').textContent='0 syndicates · 0 accounts frozen';
+  setStats(0,0,'₹0',0);
+  setStatus('Click any account to inspect XGBoost breakdown · Click Simulate to begin demo');
+  const cv=document.getElementById('pcvs');if(cv)cv.getContext('2d').clearRect(0,0,cv.width,cv.height);
+  renderAccounts();drawGraph();
+}
+
+function doExport(){alert('SyndicateShield v2 — Fraud Report\n\n▸ Syndicate ID: #47\n▸ Mule accounts: 9 (all frozen)\n▸ Funds protected: ₹3,12,400\n▸ Detection time: 3 min 48 sec\n▸ Models: Isolation Forest + XGBoost (AUC 0.94) + DBSCAN\n▸ Precision: 0.91 | Recall: 0.87 | F1: 0.89\n\nStatus: SUBMITTED TO LAW ENFORCEMENT\nCase ref: CY/2026/047/CHN');}
+
+// Idle tx ticker
+setInterval(()=>{if(!simActive){const t=[['ACC-028','SBI ATM','₹3,000'],['ACC-044','Zomato','₹450'],['ACC-072','NEFT Credit','₹15,000'],['ACC-019','Amazon','₹1,299']];const r=t[Math.floor(Math.random()*t.length)];addTx(r[0],r[1],r[2],false);}},3500);
+
+// ═══════════════════════════════════════════
+// MODAL — XGBoost breakdown
+// ═══════════════════════════════════════════
+function openModal(acc){
+  if(!acc)return;
+  document.getElementById('m-title').textContent=acc.id+' — '+acc.nm;
+  document.getElementById('m-sub').textContent=acc.tp+' account · '+acc.city+' · '+acc.bal;
+  const sc=acc.sc,m=acc.mule;
+  const col=sc>=70?'#ef4444':sc>=40?'#f59e0b':'#10b981';
+  const verd=sc>=70?'HIGH RISK — MULE CONFIRMED':sc>=40?'ELEVATED — MONITORING':'LOW RISK — NORMAL BEHAVIOUR';
+  const feats=[
+    {n:'Receive → forward velocity',v:m?62+Math.floor(Math.random()*30):4+Math.floor(Math.random()*18),c:'#ef4444'},
+    {n:'Dormancy-burst ratio',v:m?58+Math.floor(Math.random()*34):3+Math.floor(Math.random()*14),c:'#ef4444'},
+    {n:'Round-number tx ratio',v:m?48+Math.floor(Math.random()*36):7+Math.floor(Math.random()*22),c:'#f59e0b'},
+    {n:'Geographic entropy',v:m?52+Math.floor(Math.random()*34):4+Math.floor(Math.random()*18),c:'#f59e0b'},
+    {n:'Transaction hour anomaly',v:m?44+Math.floor(Math.random()*40):5+Math.floor(Math.random()*18),c:'#f59e0b'},
+    {n:'Network centrality score',v:m?58+Math.floor(Math.random()*34):2+Math.floor(Math.random()*14),c:'#ef4444'},
+    {n:'Counterparty diversity',v:m?18+Math.floor(Math.random()*28):62+Math.floor(Math.random()*32),c:'#10b981'},
+    {n:'Device consistency',v:m?8+Math.floor(Math.random()*26):72+Math.floor(Math.random()*22),c:'#10b981'},
+  ];
+  const timeline=m&&sc>=70?[
+    {t:'09:14:22',e:'Inbound transfer received',a:'₹38,000',ac:'#fca5a5'},
+    {t:'09:14:31',e:'Device-location mismatch detected',a:'—',ac:'var(--muted)'},
+    {t:'09:16:55',e:'Forward transfer initiated',a:'₹36,100',ac:'#fca5a5'},
+    {t:'09:17:02',e:'Isolation Forest: dormancy-burst alert',a:'—',ac:'var(--muted)'},
+    {t:'09:22:18',e:'XGBoost score → flagged',a:'score: 82',ac:'#fcd34d'},
+  ]:[
+    {t:'08:30:00',e:'Salary credit received',a:'₹35,000',ac:'#6ee7b7'},
+    {t:'10:15:22',e:'UPI payment sent',a:'₹1,299',ac:'var(--text)'},
+    {t:'14:00:00',e:'ATM withdrawal',a:'₹5,000',ac:'var(--text)'},
+    {t:'17:45:00',e:'Account activity normal',a:'—',ac:'var(--muted)'},
+  ];
+  document.getElementById('m-body').innerHTML=`
+    <div class="mscore-row">
+      <div><div class="mscore-n" style="color:${col}">${sc}</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:4px">MULE RISK SCORE</div></div>
+      <div><div style="font-size:12px;color:var(--muted);margin-bottom:4px">XGBoost · confidence ${m?'94.2%':'98.1%'}</div><div class="mverd" style="color:${col}">${verd}</div></div>
+    </div>
+    <div class="msec"><div class="msec-t">feature importance breakdown</div>
+    ${feats.map(f=>`<div class="frow"><div class="fname">${f.n}</div><div class="fbar-bg"><div class="fbar-fill" style="width:${f.v}%;background:${f.c}"></div></div><div class="fval">${f.v}%</div></div>`).join('')}
+    </div>
+    <div class="msec"><div class="msec-t">recent activity timeline</div>
+    ${timeline.map(t=>`<div class="tline"><div class="tl-t">${t.t}</div><div class="tl-e">${t.e}</div><div class="tl-a" style="color:${t.ac}">${t.a}</div></div>`).join('')}
+    </div>
+    <div class="mini-grid">
+      <div class="minic"><div class="mini-n" style="color:${col}">${sc}</div><div class="mini-l">Mule Score</div></div>
+      <div class="minic"><div class="mini-n" style="color:${m?'#fca5a5':'#6ee7b7'}">${m?'YES':'NO'}</div><div class="mini-l">Is Mule</div></div>
+      <div class="minic"><div class="mini-n" style="color:var(--text);font-size:13px">${acc.city}</div><div class="mini-l">City</div></div>
+    </div>`;
+  document.getElementById('modal-ov').classList.add('on');
+}
+
+// ═══════════════════════════════════════════
+// INDIA MAP
+// ═══════════════════════════════════════════
+const CITIES=[
+  {nm:'Chennai',   x:272,y:454,fr:0,st:'safe'},{nm:'Bangalore',x:208,y:420,fr:0,st:'safe'},
+  {nm:'Mumbai',    x:96, y:316,fr:0,st:'safe'},{nm:'Delhi',    x:208,y:148,fr:0,st:'safe'},
+  {nm:'Hyderabad', x:232,y:352,fr:0,st:'safe'},{nm:'Kolkata',  x:347,y:248,fr:0,st:'safe'},
+  {nm:'Ahmedabad', x:110,y:240,fr:0,st:'safe'},{nm:'Pune',     x:118,y:330,fr:0,st:'safe'},
+  {nm:'Jaipur',    x:176,y:188,fr:0,st:'safe'},{nm:'Trichy',   x:248,y:478,fr:0,st:'safe'},
+  {nm:'Coimbatore',x:190,y:466,fr:0,st:'safe'},{nm:'Kochi',    x:172,y:498,fr:0,st:'safe'},
+  {nm:'Lucknow',   x:266,y:184,fr:0,st:'safe'},{nm:'Nagpur',   x:246,y:292,fr:0,st:'safe'},
+  {nm:'Bhopal',    x:208,y:258,fr:0,st:'safe'},
+];
+const HOPS=[
+  {f:'Chennai',t:'Bangalore',   a:'₹38,000',ms:800},
+  {f:'Chennai',t:'Trichy',      a:'₹42,000',ms:1700},
+  {f:'Bangalore',t:'Hyderabad', a:'₹36,100',ms:3100},
+  {f:'Trichy',t:'Coimbatore',   a:'₹28,400',ms:3700},
+  {f:'Hyderabad',t:'Mumbai',    a:'₹31,200',ms:5100},
+  {f:'Coimbatore',t:'Kochi',    a:'₹22,800',ms:5700},
+  {f:'Mumbai',t:'Pune',         a:'₹18,600',ms:7100},
+  {f:'Mumbai',t:'Nagpur',       a:'₹25,400',ms:7700},
+  {f:'Pune',t:'Ahmedabad',      a:'₹15,700',ms:9000},
+  {f:'Nagpur',t:'Delhi',        a:'₹2,18,400',ms:10400},
+  {f:'Delhi',t:'Kolkata',       a:'₹98,000',ms:11800},
+];
+let mapTimers=[];
+
+function initMap(){
+  const cg=document.getElementById('map-cities');
+  if(!cg)return;
+  cg.innerHTML='';document.getElementById('map-arcs').innerHTML='';
+  CITIES.forEach(c=>{
+    const col='#475569';
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.id='mc-'+c.nm;
+    g.innerHTML=`<circle cx="${c.x}" cy="${c.y}" r="5" fill="${col}" id="mcd-${c.nm}" opacity=".8"/>
+    <circle cx="${c.x}" cy="${c.y}" r="10" fill="${col}" opacity=".07" id="mcr-${c.nm}"/>
+    <text x="${c.x+8}" y="${c.y+4}" font-family="IBM Plex Mono" font-size="9" fill="#4b5563">${c.nm}</text>`;
+    cg.appendChild(g);
+  });
+  renderCityList();
+}
+
+function renderCityList(){
+  const list=document.getElementById('citylist');list.innerHTML='';
+  CITIES.forEach(c=>{
+    const col=c.st==='active'?'#ef4444':c.st==='warn'?'#f59e0b':'#475569';
+    const cls=c.st==='active'?'cs-a':c.st==='warn'?'cs-w':'cs-s';
+    const d=document.createElement('div');d.className='city-item';
+    d.innerHTML=`<div class="cdot" style="background:${col}"></div><div class="cname">${c.nm}</div><div class="ccount">${c.fr}</div><div class="cstatus ${cls}">${c.st}</div>`;
+    list.appendChild(d);
+  });
+  const ac=CITIES.filter(c=>c.st==='active').length;
+  document.getElementById('mapbdg').textContent=ac+' active';
+}
+
+function runMapSim(){
+  mapTimers.forEach(t=>clearTimeout(t));mapTimers=[];
+  CITIES.forEach(c=>{c.fr=0;c.st='safe';});
+  initMap();document.getElementById('evlog').innerHTML='';
+  document.getElementById('mapbtn').textContent='⟳ RUNNING...';
+  document.getElementById('mapbtn').disabled=true;
+  document.getElementById('mapst').textContent='Tracking fraud propagation across India...';
+  HOPS.forEach(h=>{
+    mapTimers.push(setTimeout(()=>{
+      const fc=CITIES.find(c=>c.nm===h.f),tc=CITIES.find(c=>c.nm===h.t);
+      if(!fc||!tc)return;
+      fc.fr++;tc.fr++;fc.st='active';tc.st='active';
+      drawArc(fc,tc);addEvLogItem(h.f,h.t,h.a);renderCityList();
+      [fc,tc].forEach(c=>{
+        const d=document.getElementById('mcd-'+c.nm);
+        const r=document.getElementById('mcr-'+c.nm);
+        if(d){d.setAttribute('fill','#ef4444');d.setAttribute('r','7');}
+        if(r){r.setAttribute('fill','#ef4444');r.setAttribute('r','14');r.setAttribute('opacity','.14');}
+      });
+    },h.ms));
+  });
+  mapTimers.push(setTimeout(()=>{
+    document.getElementById('mapbtn').textContent='▶ SIMULATE PROPAGATION';
+    document.getElementById('mapbtn').disabled=false;
+    document.getElementById('mapst').textContent='Complete — fraud traced across '+new Set(HOPS.flatMap(h=>[h.f,h.t])).size+' cities';
+  },13000));
+}
+
+function drawArc(from,to){
+  const g=document.getElementById('map-arcs');
+  const mx=(from.x+to.x)/2,my=(from.y+to.y)/2-42;
+  const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',`M${from.x},${from.y} Q${mx},${my} ${to.x},${to.y}`);
+  p.setAttribute('fill','none');p.setAttribute('stroke','#ef4444');p.setAttribute('stroke-width','1.5');
+  p.setAttribute('opacity','.7');p.setAttribute('stroke-dasharray','4 2');
+  const len=300;p.setAttribute('stroke-dashoffset',len);p.style.transition='stroke-dashoffset .9s ease';
+  g.appendChild(p);setTimeout(()=>p.setAttribute('stroke-dashoffset','0'),40);
+}
+
+function addEvLogItem(f,t,a){
+  const log=document.getElementById('evlog');
+  const now=new Date().toLocaleTimeString('en-IN',{hour12:false});
+  const d=document.createElement('div');d.className='evlog-item';
+  d.innerHTML=`<div class="evl-top"><div class="evl-route">${f} → ${t}</div><div class="evl-amt">${a}</div></div><div class="evl-time">${now}</div>`;
+  log.insertBefore(d,log.firstChild);
+}
+
+// ═══════════════════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════════════════
+let analyticsInited=false;
+function initAnalytics(){
+  if(analyticsInited)return;analyticsInited=true;
+  drawLineChart();drawHistChart();drawDonutChart();renderTable();
+}
+
+function drawLineChart(){
+  const cv=document.getElementById('line-cv');
+  cv.width=cv.parentElement.clientWidth-32;cv.height=170;
+  const ctx=cv.getContext('2d'),w=cv.width,h=cv.height,pd=26;
+  const data=Array.from({length:30},(_,i)=>Math.floor(18+Math.sin(i*.38)*14+Math.random()*22+i*.9));
+  const mx=Math.max(...data)+5;
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pd+(h-2*pd)*i/4;
+    ctx.beginPath();ctx.moveTo(pd,y);ctx.lineTo(w-8,y);ctx.stroke();
+    ctx.fillStyle='rgba(100,116,139,.6)';ctx.font='9px IBM Plex Mono';ctx.fillText(Math.round(mx*(1-i/4)),2,y+3);
+  }
+  const g=ctx.createLinearGradient(0,pd,0,h-pd);
+  g.addColorStop(0,'rgba(239,68,68,.18)');g.addColorStop(1,'rgba(239,68,68,.01)');
+  ctx.beginPath();ctx.moveTo(pd,h-pd);
+  data.forEach((v,i)=>{const x=pd+(w-pd-8)*i/(data.length-1);const y=pd+(h-2*pd)*(1-v/mx);ctx.lineTo(x,y);});
+  ctx.lineTo(pd+(w-pd-8),h-pd);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+  ctx.beginPath();ctx.strokeStyle='#ef4444';ctx.lineWidth=1.5;
+  data.forEach((v,i)=>{const x=pd+(w-pd-8)*i/(data.length-1);const y=pd+(h-2*pd)*(1-v/mx);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.stroke();
+  const lx=pd+(w-pd-8),ly=pd+(h-2*pd)*(1-data[data.length-1]/mx);
+  ctx.beginPath();ctx.arc(lx,ly,3,0,Math.PI*2);ctx.fillStyle='#ef4444';ctx.fill();
+  ctx.fillStyle='#fca5a5';ctx.font='9px IBM Plex Mono';ctx.fillText(data[data.length-1],lx-8,ly-8);
+}
+
+function drawHistChart(){
+  const cv=document.getElementById('hist-cv');
+  cv.width=cv.parentElement.clientWidth-32;cv.height=170;
+  const ctx=cv.getContext('2d'),w=cv.width,h=cv.height,pd=24;
+  const bkts=[118,92,76,62,42,35,52,68,85,106];
+  const mx=Math.max(...bkts)+10;const bw=(w-2*pd)/bkts.length;
+  ctx.clearRect(0,0,w,h);
+  bkts.forEach((v,i)=>{
+    const x=pd+i*bw,bh=(h-2*pd)*v/mx,y=h-pd-bh;
+    ctx.fillStyle=i>=7?'rgba(239,68,68,.65)':'rgba(59,130,246,.4)';ctx.fillRect(x+2,y,bw-4,bh);
+    ctx.fillStyle='rgba(100,116,139,.6)';ctx.font='8px IBM Plex Mono';ctx.fillText(i*10,x+2,h-10);
+  });
+  ctx.fillStyle='rgba(239,68,68,.7)';ctx.font='9px IBM Plex Mono';ctx.fillText('↑ HIGH RISK',pd+7*bw+2,pd+18);
+  ctx.fillStyle='rgba(100,116,139,.5)';ctx.fillText('Score →',w-48,h-6);
+}
+
+function drawDonutChart(){
+  const cv=document.getElementById('donut-cv');
+  cv.width=cv.parentElement.clientWidth-32;cv.height=170;
+  const ctx=cv.getContext('2d'),w=cv.width,h=cv.height;
+  const cx=w/2-45,cy=h/2,r=62,inn=36;
+  const segs=[{l:'UPI Scam',v:42,c:'#ef4444'},{l:'Investment Fraud',v:28,c:'#f59e0b'},{l:'Job Scam',v:18,c:'#8b5cf6'},{l:'KYC Fraud',v:12,c:'#3b82f6'}];
+  ctx.clearRect(0,0,w,h);
+  let s=-Math.PI/2;
+  segs.forEach(sg=>{
+    const a=Math.PI*2*sg.v/100;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,s,s+a);ctx.closePath();ctx.fillStyle=sg.c+'cc';ctx.fill();
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,inn,s,s+a);ctx.closePath();ctx.fillStyle='#0d1117';ctx.fill();
+    s+=a;
+  });
+  ctx.fillStyle='rgba(148,163,184,.7)';ctx.font='10px IBM Plex Sans';ctx.textAlign='center';ctx.fillText('Category',cx,cy+4);ctx.textAlign='left';
+  segs.forEach((sg,i)=>{
+    const ly=20+i*36;
+    ctx.fillStyle=sg.c;ctx.fillRect(w-90,ly,10,10);
+    ctx.fillStyle='rgba(148,163,184,.8)';ctx.font='10px IBM Plex Sans';ctx.fillText(sg.l,w-76,ly+9);
+    ctx.fillStyle=sg.c;ctx.font='bold 11px IBM Plex Mono';ctx.textAlign='right';ctx.fillText(sg.v+'%',w-2,ly+9);ctx.textAlign='left';
+  });
+}
+
+function renderTable(){
+  const rows=[
+    {id:'ACC-031',nm:'Dinesh T.',sc:91,tx:23,am:'₹2,18,400',st:'frozen'},
+    {id:'ACC-034',nm:'Geetha N.',sc:84,tx:14,am:'₹36,100', st:'frozen'},
+    {id:'ACC-041',nm:'Anitha R.',sc:82,tx:12,am:'₹40,200', st:'frozen'},
+    {id:'ACC-061',nm:'Rajan M.', sc:79,tx:10,am:'₹18,600', st:'frozen'},
+    {id:'ACC-007',nm:'Priya S.', sc:74,tx:9, am:'₹15,700', st:'frozen'},
+    {id:'ACC-056',nm:'Selvi T.', sc:71,tx:8, am:'₹22,800', st:'monitoring'},
+  ];
+  document.getElementById('atbody').innerHTML=rows.map(r=>`<tr>
+    <td style="font-family:var(--mono)">${r.id}</td><td>${r.nm}</td>
+    <td><span style="font-family:var(--mono);color:${r.sc>=70?'#fca5a5':r.sc>=40?'#fcd34d':'#6ee7b7'}">${r.sc}</span></td>
+    <td style="font-family:var(--mono)">${r.tx}</td>
+    <td style="font-family:var(--mono);color:#fca5a5">${r.am}</td>
+    <td><span style="font-size:10px;padding:2px 7px;border-radius:3px;background:${r.st==='frozen'?'rgba(16,185,129,.15)':'rgba(245,158,11,.15)'};color:${r.st==='frozen'?'#6ee7b7':'#fcd34d'}">${r.st}</span></td>
+  </tr>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// ML METRICS
+// ═══════════════════════════════════════════
+let metricsInited=false;
+function initMetrics(){
+  if(metricsInited)return;metricsInited=true;
+  setTimeout(()=>{
+    document.getElementById('mfill-p').style.width='91%';
+    document.getElementById('mfill-r').style.width='87%';
+    document.getElementById('mfill-f').style.width='89%';
+  },60);
+  drawROC();drawFI();
+}
+
+function drawROC(){
+  const cv=document.getElementById('roc-cv');
+  cv.width=cv.parentElement.clientWidth-32;cv.height=200;
+  const ctx=cv.getContext('2d'),w=cv.width,h=cv.height,pd=30;
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pd+(h-2*pd)*i/4,x=pd+(w-2*pd)*i/4;
+    ctx.beginPath();ctx.moveTo(pd,y);ctx.lineTo(w-8,y);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x,pd);ctx.lineTo(x,h-pd);ctx.stroke();
+    ctx.fillStyle='rgba(100,116,139,.5)';ctx.font='8px IBM Plex Mono';
+    ctx.fillText((1-i*.25).toFixed(1),2,y+3);ctx.fillText((i*.25).toFixed(1),x-6,h-8);
+  }
+  ctx.strokeStyle='rgba(100,116,139,.25)';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(pd,h-pd);ctx.lineTo(w-8,pd);ctx.stroke();ctx.setLineDash([]);
+  const pts=[[0,0],[.02,.32],[.05,.6],[.08,.74],[.12,.84],[.18,.89],[.25,.93],[.35,.95],[.5,.97],[.7,.98],[1,1]];
+  const grd=ctx.createLinearGradient(0,pd,0,h-pd);
+  grd.addColorStop(0,'rgba(59,130,246,.18)');grd.addColorStop(1,'rgba(59,130,246,.02)');
+  ctx.beginPath();ctx.moveTo(pd,h-pd);
+  pts.forEach(p=>{const x=pd+(w-pd-8)*p[0];const y=h-pd-(h-2*pd)*p[1];ctx.lineTo(x,y);});
+  ctx.lineTo(w-8,h-pd);ctx.closePath();ctx.fillStyle=grd;ctx.fill();
+  ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.beginPath();
+  pts.forEach((p,i)=>{const x=pd+(w-pd-8)*p[0];const y=h-pd-(h-2*pd)*p[1];i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.stroke();
+  const op=pts[5];const ox=pd+(w-pd-8)*op[0],oy=h-pd-(h-2*pd)*op[1];
+  ctx.beginPath();ctx.arc(ox,oy,4,0,Math.PI*2);ctx.fillStyle='#93c5fd';ctx.fill();
+  ctx.fillStyle='#93c5fd';ctx.font='bold 11px IBM Plex Mono';ctx.fillText('AUC = 0.94',pd+8,pd+16);
+  ctx.fillStyle='rgba(100,116,139,.55)';ctx.font='9px IBM Plex Mono';
+  ctx.fillText('False Positive Rate →',w-112,h-4);
+  ctx.save();ctx.translate(11,h/2);ctx.rotate(-Math.PI/2);ctx.fillText('True Positive Rate',0,0);ctx.restore();
+}
+
+function drawFI(){
+  const feats=[
+    {n:'Receive → forward velocity',p:94},{n:'Dormancy-burst ratio',p:89},
+    {n:'Network centrality score',p:82},{n:'Transaction hour anomaly',p:76},
+    {n:'Round-number tx ratio',p:71},{n:'Geographic entropy',p:68},
+    {n:'Device consistency',p:62},{n:'Counterparty diversity',p:55},
+    {n:'Account age factor',p:48},{n:'Average tx amount',p:41},
+  ];
+  document.getElementById('fi-cont').innerHTML=feats.map(f=>`
+    <div class="fi-row">
+      <div class="fi-name">${f.n}</div>
+      <div style="flex:1;height:8px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden">
+        <div class="fi-bar" style="width:${f.p}%"></div>
+      </div>
+      <div class="fi-pct">${f.p}%</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+renderAccounts();
+drawGraph();
+initMap();
+window.addEventListener('resize',()=>{if(document.getElementById('pcvs').width>0)setupCanvas();});
+</script>
+</body>
+</html>
