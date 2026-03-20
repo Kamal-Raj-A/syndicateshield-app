@@ -1,0 +1,7 @@
+node_modules/
+.local/
+pnpm-lock.yaml
+*.tsbuildinfo
+.env
+dist/
+build/
