@@ -10,10 +10,10 @@
 
 Every UPI scam, investment fraud, and job scam in India uses **mule accounts** to layer and move stolen money. Banks monitor accounts individually — but mule accounts look completely normal in isolation. The fraud only becomes visible when you detect **behavioral synchrony across multiple accounts simultaneously**.
 
-- 🔴 **₹11,269 Crore** lost to cyber fraud in India in 2024
-- 🔴 **85%** of all digital fraud routed through mule account networks
-- 🔴 **1.8 crore** UPI fraud victims (RBI Annual Report 2024)
-- 🔴 **<3%** of stolen funds ever recovered
+-  **₹11,269 Crore** lost to cyber fraud in India in 2024
+-  **85%** of all digital fraud routed through mule account networks
+-  **1.8 crore** UPI fraud victims (RBI Annual Report 2024)
+-  **<3%** of stolen funds ever recovered
 
 **No existing bank system does cross-account temporal correlation detection in real time.**
 
@@ -40,7 +40,7 @@ VICTIM TRANSFER
 FREEZE RECOMMENDATION + EVIDENCE PACKAGE → < 4 minutes
 ```
 
-| ❌ Current Bank Systems | ✅ SyndicateShield |
+|  Current Bank Systems |  SyndicateShield |
 |---|---|
 | Monitors accounts one by one | Monitors the entire network simultaneously |
 | Reacts after money moves | Detects while money is still moving |
@@ -112,10 +112,10 @@ FREEZE RECOMMENDATION + EVIDENCE PACKAGE → < 4 minutes
 
 | SDG | Alignment |
 |---|---|
-| ⚖️ **SDG 16** — Peace, Justice & Strong Institutions | Directly supports law enforcement in dismantling financial crime networks |
-| 📉 **SDG 10** — Reduced Inequalities | Protects rural and semi-urban Indians who are most targeted by UPI scams |
-| 💡 **SDG 9** — Industry, Innovation & Infrastructure | AI-powered fintech innovation for India's ₹200T digital payment ecosystem |
-| 💼 **SDG 8** — Decent Work & Economic Growth | Secures digital financial trust enabling safe economic participation |
+|  **SDG 16** — Peace, Justice & Strong Institutions | Directly supports law enforcement in dismantling financial crime networks |
+|  **SDG 10** — Reduced Inequalities | Protects rural and semi-urban Indians who are most targeted by UPI scams |
+|  **SDG 9** — Industry, Innovation & Infrastructure | AI-powered fintech innovation for India's ₹200T digital payment ecosystem |
+|  **SDG 8** — Decent Work & Economic Growth | Secures digital financial trust enabling safe economic participation |
 
 ---
 
@@ -123,7 +123,7 @@ FREEZE RECOMMENDATION + EVIDENCE PACKAGE → < 4 minutes
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/syndicateshield.git
+git clone https://github.com/Kamal-Raj-A/syndicateshield-app.git
 
 # Navigate into the folder
 cd syndicateshield
@@ -144,17 +144,6 @@ syndicateshield/
 ├── README.md           # This file
 └── assets/             # Screenshots (optional)
 ```
-
----
-
-## 📚 References & Dataset
-
-- **PaySim Dataset** — Kaggle (6.3M synthetic financial transactions for fraud simulation)
-- **RBI Annual Report 2024** — Cyber fraud statistics and UPI fraud data
-- **Indian Cyber Crime Coordination Centre (I4C)** — Mule account network data
-- **XGBoost** — Chen & Guestrin, 2016 — Scalable and accurate boosting classifier
-- **DBSCAN** — Ester et al., 1996 — Density-based spatial clustering for syndicate mapping
-- **Isolation Forest** — Liu et al., 2008 — Anomaly detection for dormancy-burst patterns
 
 ---
 
