@@ -51,7 +51,7 @@ FREEZE RECOMMENDATION + EVIDENCE PACKAGE → < 4 minutes
 
 ## 🖥 Live Demo
 
-> 🔗 **[syndicateshield.vercel.app](https://your-deployment-link.vercel.app)**
+> 🔗 **https://syndicateshield-app.vercel.app/**
 
 ### Demo Walkthrough
 1. Open the dashboard → Click **▶ RUN FRAUD SIMULATION**
@@ -135,15 +135,15 @@ open index.html
 > The prototype is a single self-contained HTML file. No npm install, no build step, no server needed. Just open in any modern browser.
 
 ---
+## Demo Screenshots
 
-## 📁 Project Structure
-
-```
-syndicateshield/
-├── index.html          # Full prototype — Dashboard, Geo Map, Analytics, ML Metrics
-├── README.md           # This file
-└── assets/             # Screenshots (optional)
-```
+<img width="1919" height="912" alt="Screenshot 2026-03-20 092847" src="https://github.com/user-attachments/assets/48e76d73-1854-44e1-9cad-dcb09f6a0c7c" />
+<img width="1919" height="965" alt="Screenshot 2026-03-20 092957" src="https://github.com/user-attachments/assets/2179e1d6-4243-4849-b2db-999937635414" />
+<img width="1919" height="903" alt="Screenshot 2026-03-20 093020" src="https://github.com/user-attachments/assets/48f30123-a5e3-4b79-ad09-c81dd3479dd2" />
+<img width="1919" height="899" alt="Screenshot 2026-03-20 093041" src="https://github.com/user-attachments/assets/95270562-39e8-4a75-b05c-d4ce50402e03" />
+<img width="1919" height="895" alt="Screenshot 2026-03-20 093121" src="https://github.com/user-attachments/assets/b4c0603b-7227-498f-8d60-dcefd4b7ac52" />
+<img width="1919" height="907" alt="Screenshot 2026-03-20 093154" src="https://github.com/user-attachments/assets/72398f88-4733-45d9-b739-18dccf221dd5" />
+<img width="1919" height="906" alt="Screenshot 2026-03-20 093232" src="https://github.com/user-attachments/assets/41a8f66d-db07-4414-8208-4f7561e69ee4" />
 
 ---
 
